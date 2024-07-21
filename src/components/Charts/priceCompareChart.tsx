@@ -56,7 +56,6 @@ const PriceCompareChart:FC<PriceCompareChart> =()=> {
         }));
       }
     const getChartData = async ()=>{
-        console.log(startTime,endTime)
         try {
           setLoading(true)
             const res1 = await axios.get(`/coins/solana/market_chart/range?vs_currency=usd&from=${startTime}&to=${endTime}`)
@@ -75,6 +74,7 @@ const PriceCompareChart:FC<PriceCompareChart> =()=> {
           } else {
             console.log('An unknown error occurred');
             toast.error('An unknown error occurred');
+            setLoading(false)
           }
         }
     }
@@ -118,18 +118,12 @@ const PriceCompareChart:FC<PriceCompareChart> =()=> {
       
       useEffect(()=>{
         if(!startTime)gettingTimeStamps();
-        console.log(startTime)
         if(startTime && endTime) getChartData();
-        if(chartData)console.log(chartData);
       },[startTime])
      
    
    
       useEffect(()=>{
-        console.log(chartData)
-        console.log(bitcoinData)
-        console.log(ethData)
-        console.log(tethData)
 
         if(bitcoinData && ethData) {
             const mergedData = mergeData(bitcoinData, ethData,tethData);

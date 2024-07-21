@@ -6,6 +6,8 @@ import TableContentCell from "../components/Table/tableContentCell";
 import PriceCompareChart from "../components/Charts/priceCompareChart";
 import axios from "../helpers/axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 interface Main {
 }
 interface CT {
@@ -13,15 +15,26 @@ interface CT {
 }
 
 const Main:FC<Main>=({})=>{
+    const [loading,setLoading]=useState<boolean>();
     const navigate = useNavigate()
     const [trendData,setTrendData]= useState<any>();
     const getTrendData = async ()=>{
         try {
+            setLoading(true)
             const res= await axios.get('/search/trending');
             console.log(res.data.coins)
             setTrendData(res.data.coins)
+            setLoading(false)
         } catch (error) {
-            console.log(error)
+            if (error instanceof Error) {
+                console.log(error);
+                toast.error(`${error.message} : Your request exceeds the allowed time range.`);
+                setLoading(false)
+              } else {
+                console.log('An unknown error occurred');
+                toast.error('An unknown error occurred');
+                setLoading(false)
+              }
         }
     }
     useEffect(()=>{
@@ -45,6 +58,7 @@ const Main:FC<Main>=({})=>{
                    <TableHeaderCell className="text-[8px] md:text-sm"  text="24H Change" />
                    <TableHeaderCell className="text-[8px] md:text-sm"  text="Market Cap" />
                 </TableHeader> 
+                {loading && <div className='w-full flex justify-center'> <ClipLoader color='0080A2' /></div>}
                 {trendData?.map((coin:any,index:number)=>{
                     console.log(coin.item.data.price_change_percentage_24h.usd)
                     return (

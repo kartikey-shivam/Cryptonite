@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import React, { FC, FunctionComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axios from '../../helpers/axios';
+import toast from 'react-hot-toast';
+import { ClipLoader } from 'react-spinners';
 
 interface MarketCapChart {
     id?:string
@@ -41,11 +43,21 @@ const MarketCapChart:FC<MarketCapChart> =({id})=> {
     const getChartData = async ()=>{
         console.log(startTime,endTime)
         try {
+          setLoading(true)
             const res = await axios.get(`/coins/${id}/market_chart/range?vs_currency=usd&from=${startTime}&to=${endTime}`)
             console.log(res.data.prices)
             setChartData(formatData(convertData(res?.data.prices)))
+            setLoading(false)
         } catch (error) {
-            console.log(error)
+          if (error instanceof Error) {
+            console.log(error);
+            toast.error(`${error.message} : Your request exceeds the allowed time range.`);
+            setLoading(false)
+          } else {
+            console.log('An unknown error occurred');
+            toast.error('An unknown error occurred');
+            setLoading(false)
+          }
         }
     }
    
@@ -63,6 +75,7 @@ const MarketCapChart:FC<MarketCapChart> =({id})=> {
       },[chartData])
     return (
         <div className='lg:-ml-2 py-8 overflow-auto'>
+           {loading && <div className='w-full flex justify-center'> <ClipLoader color='0080A2' /></div>}
        {chartData && <div> <LineChart width={780} height={400} data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
             {/* <CartesianGrid strokeDasharray="3 3" /> */}
             <XAxis dataKey="time" tickCount={10} label={{ value: 'DD MM', position: 'insideBottomRight', offset: -5 }} />
