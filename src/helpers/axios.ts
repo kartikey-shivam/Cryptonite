@@ -8,7 +8,7 @@ console.log(api);
 // Create an Axios instance with a base URL and default headers
 const axiosInstance = axios.create({
   baseURL: api,
-  headers: {accept: 'application/json', 'CG-BSiPzTLeJqEYHqQTQkiiQw': 'CG-BSiPzTLeJqEYHqQTQkiiQw'},
+  headers: {accept: 'application/json', 'CG-BSiPzTLeJqEYHqQTQkiiQwcd': 'CG-BSiPzTLeJqEYHqQTQkiiQwcd'},
 });
 
 // Add a request interceptor to handle token authorization

@@ -7,6 +7,7 @@ import DropHere from "../DropHere/dropHere";
 import TableHeader from "../Table/tableHeader";
 import TableHeaderCell from "../Table/tableHeaderCell";
 import TableContentCell from "../Table/tableContentCell";
+import { useNavigate } from "react-router-dom";
 
 export interface WatchListCoin {
   id: string;
@@ -27,7 +28,7 @@ const Watchlist: FC<WatchlistProps> = ({ setActiveList, onDrop, watchList }) => 
   useEffect(() => {
     console.log(watchList);
   }, [watchList]);
-
+  const navigate = useNavigate()
   return (
     <div className="w-full h-fit border-solid shadow-box border-gray py-2 px-3 overflow-auto">
       <div className="flex justify-between items-center">
@@ -47,6 +48,7 @@ const Watchlist: FC<WatchlistProps> = ({ setActiveList, onDrop, watchList }) => 
               <React.Fragment>
                 <div
                   draggable={true}
+                  onClick={()=>navigate(`/product/${coin.id}`)}
                   onDragStart={() => setActiveList({ coin, index: index + 1 })}
                   onDragEnd={() =>
                     setActiveList({
@@ -73,7 +75,7 @@ const Watchlist: FC<WatchlistProps> = ({ setActiveList, onDrop, watchList }) => 
                     Icon={LuArrowUpSquare}
                     text={`${coin.price_change_percentage_24h.toFixed(3)}%`}
                   />
-                  <TableContentCell className="font-normal text-sm truncate" text={`$${coin.market_cap}`} />
+                  <TableContentCell className="font-normal text-sm truncate" text={`$${coin.market_cap.toLocaleString()}`} />
                 </div>
                 {index < 4 && <DropHere onDrop={() => onDrop(coin, index + 1)} />}
               </React.Fragment>

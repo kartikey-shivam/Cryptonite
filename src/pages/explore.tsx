@@ -28,7 +28,7 @@ const Explore: FC<Explore> = ({ setCoin, watchlist, setActiveList }) => {
 
 
   return (
-    <div className="p-4 space-y-8  border-solid border-black shadow-box dark:border-white rounded mt-4 text-black">
+    <div className="w-[50rem] lg:w-full p-4 space-y-8  border-solid border-black shadow-box dark:border-white rounded mt-4 text-black">
       <div className="flex justify-between">
         <div className="flex space-x-4">
           <Pill active={activeTag == 1} setActiveTag={() => setActiveTag(1)} text="All Coins" />
@@ -46,7 +46,7 @@ const Explore: FC<Explore> = ({ setCoin, watchlist, setActiveList }) => {
 
       {activeTag == 1 && (
         <div>
-          <TableHeader>
+          <TableHeader className="w-[50rem] lg:w-full">
             <TableHeaderCell className="w-[40%]" text="Name" />
             <TableHeaderCell text="Marketcap" />
             <TableHeaderCell text="Balance" />
@@ -102,7 +102,7 @@ const Explore: FC<Explore> = ({ setCoin, watchlist, setActiveList }) => {
 
       {activeTag == 2 && (
         <div className="w-full mt-[10px]">
-          <TableHeader>
+          <TableHeader className="w-[50rem] lg:w-full">
             <TableHeaderCell text="Token" />
             <TableHeaderCell text="Last Price" />
             <TableHeaderCell text="24H Change" />
