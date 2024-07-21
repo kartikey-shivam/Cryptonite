@@ -3,6 +3,7 @@ import React, { FC, FunctionComponent, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axios from '../../helpers/axios';
 import toast from 'react-hot-toast';
+import { ClipLoader } from 'react-spinners';
 
 interface PriceCompareChart {
     id?:string
@@ -57,17 +58,20 @@ const PriceCompareChart:FC<PriceCompareChart> =()=> {
     const getChartData = async ()=>{
         console.log(startTime,endTime)
         try {
+          setLoading(true)
             const res1 = await axios.get(`/coins/solana/market_chart/range?vs_currency=usd&from=${startTime}&to=${endTime}`)
             const res2= await axios.get(`/coins/binancecoin/market_chart/range?vs_currency=usd&from=${startTime}&to=${endTime}`)
             // const res3 = await axios.get(`/coins/ethereum/market_chart/range?vs_currency=usd&from=${startTime}&to=${endTime}`)
             setBitcoinData(formatData(convertData(res1?.data.market_caps)))
             // setTethData(formatData(convertData(res3?.data.market_caps)))
             setEthData(formatData(convertData(res2?.data.market_caps)))
+            setLoading(false)
 
         } catch (error) {
           if (error instanceof Error) {
             console.log(error);
             toast.error(`${error.message} : Your request exceeds the allowed time range.`);
+            setLoading(false)
           } else {
             console.log('An unknown error occurred');
             toast.error('An unknown error occurred');
@@ -134,6 +138,7 @@ const PriceCompareChart:FC<PriceCompareChart> =()=> {
       },[chartData,bitcoinData,tethData,ethData])
     return (
         <div className='-ml-2 py-8 overflow-auto'>
+          {loading && <div className='w-full flex justify-center'> <ClipLoader color='0080A2' /></div>}
        {chartData && <div> <LineChart width={780} height={400} data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
             {/* <CartesianGrid strokeDasharray="3 3" /> */}
             <XAxis dataKey="time" tickCount={5} label={{ value: 'DD MM', position: 'insideBottomRight', offset: -5 }} />
